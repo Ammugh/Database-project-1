@@ -1,0 +1,8 @@
+SQL Query for Deleting a record that violates a referential integrity 
+constraint.
+
+mysql> use axk7120
+Database changed
+mysql> DELETE FROM STATE WHERE State= 'Oregon';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`axk7120`.`county`, CONSTRAINT `county_ibfk_1` FOREIGN KEY (`State`) REFERENCES `state` (`State`))
+mysql> notee;

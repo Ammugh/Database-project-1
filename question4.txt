@@ -1,0 +1,14 @@
+Below query is violation Primary Key integrity constraint
+mysql> use axk7120
+Database changed
+mysql> INSERT INTO STATE values(1,'Colorado','CO',1840,'Denver',1833,250,'NO',543443,145322);
+ERROR 1062 (23000): Duplicate entry 'Colorado' for key 'state.PRIMARY'
+
+Below query is violation Foriegn Key integrity constraint
+mysql> INSERT INTO COUNTY values('Atlanta','Kauai',87694,28.56987,-160.46452);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`axk7120`.`county`, CONSTRAINT `county_ibfk_1` FOREIGN KEY (`State`) REFERENCES `state` (`State`))
+
+Below query is violation integrity constraint where Primary key cannot be NULL.
+mysql> INSERT into STATE values(1,NULL,'ID',1987,'Topeka',1843,200,'NO',542443,349322);
+ERROR 1048 (23000): Column 'State' cannot be null
+mysql> notee;

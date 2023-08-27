@@ -1,0 +1,381 @@
+
+3.1.Name of state with largest in size is displayed
+
+mysql> use axk7120
+Database changed
+mysql> SELECT State from STATE where LandArea = (select max(LandArea) from STATE);
++--------+
+| State  |
++--------+
+| Alaska |
++--------+
+1 row in set (0.03 sec)
+
+3.2 The names of counties, their parent state, their population, number of positive cases 
+by  date,  sorted  in  the  order  of  highest  to  lowest  density  of  positive  cases  per  thousand  of 
+population are displayed.
+
+mysql> SELECT COUNTY.County,COUNTY.State,COUNTY.Population,TestDate,PositiveCount FROM COUNTY,CONFIRMED_CASES WHERE COUNTY.County=CONFIRMED_CASES.County AND COUNTY.State=CONFIRMED_CASES.State AND COUNTY.Population!=0 ORDER BY (PositiveCount/COUNTY.Population)*1000 desc limit 40;
++---------------+--------------+------------+------------+---------------+
+| County        | State        | Population | TestDate   | PositiveCount |
++---------------+--------------+------------+------------+---------------+
+| Childress     | Texas        |       7306 | 2020-11-07 |           599 |
+| Trousdale     | Tennessee    |      11284 | 2020-05-01 |           897 |
+| Pershing      | Nevada       |       6725 | 2020-12-29 |           486 |
+| Forest        | Pennsylvania |       7247 | 2021-01-21 |           514 |
+| Kearny        | Kansas       |       3838 | 2020-11-23 |           258 |
+| Union         | Georgia      |      24511 | 2020-11-03 |          1447 |
+| Wayne         | Tennessee    |      16673 | 2020-08-31 |           967 |
+| Lake          | Tennessee    |       7016 | 2020-06-02 |           351 |
+| Washington    | Texas        |      35882 | 2021-02-01 |          1535 |
+| Madison       | Texas        |      14284 | 2021-02-01 |           608 |
+| Caldwell      | Texas        |      43664 | 2021-02-01 |          1836 |
+| Lincoln       | Colorado     |       5701 | 2020-12-02 |           235 |
+| Hill          | Texas        |      36649 | 2021-02-01 |          1498 |
+| Grimes        | Texas        |      28880 | 2021-02-01 |          1164 |
+| Robertson     | Texas        |      17074 | 2021-02-01 |           685 |
+| Freestone     | Texas        |      19717 | 2021-02-01 |           736 |
+| Collingsworth | Texas        |       2920 | 2020-12-09 |           107 |
+| Lafayette     | Florida      |       8422 | 2020-08-14 |           308 |
+| Burleson      | Texas        |      18443 | 2021-02-01 |           665 |
+| Kalawao       | Hawaii       |         86 | 2020-10-30 |             3 |
+| Decatur       | Georgia      |      26404 | 2020-11-07 |           900 |
+| Limestone     | Texas        |      23437 | 2021-02-01 |           789 |
+| Falls         | Texas        |      17297 | 2021-02-01 |           574 |
+| Sawyer        | Wisconsin    |      16558 | 2020-09-16 |           545 |
+| Lafayette     | Florida      |       8422 | 2020-08-13 |           276 |
+| Jones         | Texas        |      20083 | 2020-11-11 |           653 |
+| Coryell       | Texas        |      75951 | 2021-02-01 |          2432 |
+| Issaquena     | Mississippi  |       1327 | 2020-08-21 |            42 |
+| Mills         | Texas        |       4873 | 2021-02-01 |           144 |
+| Lampasas      | Texas        |      21428 | 2021-02-01 |           628 |
+| Bent          | Colorado     |       5577 | 2020-12-10 |           163 |
+| Leon          | Texas        |      17404 | 2021-02-01 |           507 |
+| Crowley       | Colorado     |       6061 | 2020-11-13 |           176 |
+| La Salle      | Texas        |       7520 | 2020-07-18 |           218 |
+| Norton        | Kansas       |       5361 | 2020-11-06 |           155 |
+| Trousdale     | Tennessee    |      11284 | 2020-05-02 |           324 |
+| Lake          | Tennessee    |       7016 | 2020-05-13 |           201 |
+| Pershing      | Nevada       |       6725 | 2020-12-10 |           191 |
+| Burnet        | Texas        |      48155 | 2021-02-01 |          1357 |
+| Bastrop       | Texas        |      88723 | 2021-02-01 |          2459 |
++---------------+--------------+------------+------------+---------------+
+40 rows in set (4.98 sec)
+
+3.3 The names of counties, their parent state, their population, number of positive cases 
+by  date,  sorted  in  the  order  of  highest  to  lowest  density  of  positive  cases  per  deaths per thousand of population
+is displayed
+
+mysql> SELECT C.County,C.State,C.Population,CC.PositiveCount,CC.TestDate FROM COUNTY C,CONFIRMED_CASES CC WHERE C.County=CC.County AND C.State=CC.State AND C.Population>0 ORDER BY ((SELECT COUNT(D.DeahCount) FROM deaths D WHERE D.County =CC.County AND D.State =CC.State)*1000)/C.Population DESC limit 40;
++---------+----------+------------+---------------+------------+
+| County  | State    | Population | PositiveCount | TestDate   |
++---------+----------+------------+---------------+------------+
+| Kalawao | Hawaii   |         86 |             0 | 2021-02-03 |
+| Kalawao | Hawaii   |         86 |             3 | 2020-10-30 |
+| Grant   | Nebraska |        623 |             1 | 2020-11-12 |
+| Grant   | Nebraska |        623 |             1 | 2020-09-16 |
+| Grant   | Nebraska |        623 |             3 | 2021-01-30 |
+| Grant   | Nebraska |        623 |             2 | 2020-10-18 |
+| Grant   | Nebraska |        623 |             1 | 2020-11-05 |
+| Grant   | Nebraska |        623 |             1 | 2020-11-16 |
+| Grant   | Nebraska |        623 |             1 | 2020-11-23 |
+| Grant   | Nebraska |        623 |             1 | 2020-12-02 |
+| Grant   | Nebraska |        623 |             2 | 2020-11-17 |
+| Grant   | Nebraska |        623 |             1 | 2020-10-30 |
+| Grant   | Nebraska |        623 |             2 | 2020-11-18 |
+| Grant   | Nebraska |        623 |             2 | 2020-11-26 |
+| Grant   | Nebraska |        623 |             0 | 2021-02-03 |
+| Grant   | Nebraska |        623 |             1 | 2020-10-24 |
+| Grant   | Nebraska |        623 |             1 | 2020-10-03 |
+| Grant   | Nebraska |        623 |             1 | 2020-12-05 |
+| Grant   | Nebraska |        623 |             2 | 2020-12-15 |
+| Grant   | Nebraska |        623 |             1 | 2020-10-08 |
+| Grant   | Nebraska |        623 |             1 | 2020-11-10 |
+| Grant   | Nebraska |        623 |             1 | 2020-11-20 |
+| Grant   | Nebraska |        623 |             2 | 2020-11-13 |
+| Kenedy  | Texas    |        404 |             1 | 2020-07-03 |
+| Kenedy  | Texas    |        404 |             1 | 2020-11-24 |
+| Kenedy  | Texas    |        404 |             1 | 2020-09-04 |
+| Kenedy  | Texas    |        404 |             2 | 2020-12-03 |
+| Kenedy  | Texas    |        404 |             2 | 2020-12-01 |
+| Kenedy  | Texas    |        404 |             2 | 2020-07-12 |
+| Kenedy  | Texas    |        404 |             1 | 2020-11-05 |
+| Kenedy  | Texas    |        404 |             1 | 2020-08-18 |
+| Kenedy  | Texas    |        404 |             1 | 2020-12-17 |
+| Kenedy  | Texas    |        404 |             3 | 2020-11-04 |
+| Kenedy  | Texas    |        404 |             3 | 2021-01-08 |
+| Kenedy  | Texas    |        404 |             1 | 2020-07-29 |
+| Kenedy  | Texas    |        404 |             1 | 2021-01-09 |
+| Kenedy  | Texas    |        404 |             3 | 2021-01-05 |
+| Kenedy  | Texas    |        404 |             1 | 2020-08-01 |
+| Kenedy  | Texas    |        404 |             1 | 2020-07-25 |
+| Kenedy  | Texas    |        404 |             4 | 2020-10-24 |
++---------+----------+------------+---------------+------------+
+40 rows in set (1 min 38.52 sec)
+
+3.4 Report for top 10 sensitive counties per state from positive case point of view is displayed
+mysql> set session sql_mode='';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT COUNTY, STATE, po as Positive_count FROM (SELECT County,po,State, rank() OVER (PARTITION BY State ORDER BY po desc) state_rank FROM (SELECT sum(PositiveCount) as po,County, State FROM CONFIRMED_CASES GROUP BY County ORDER BY po desc) AS d ORDER BY po desc) AS d WHERE state_rank <=10 ORDER BY State, state_rank limit 40;
++----------------------+----------+----------------+
+| COUNTY               | STATE    | Positive_count |
++----------------------+----------+----------------+
+| Jefferson            | Alabama  |         303306 |
+| Dallas               | Alabama  |         276998 |
+| Montgomery           | Alabama  |         259434 |
+| Franklin             | Alabama  |         180074 |
+| Washington           | Alabama  |         176212 |
+| Marion               | Alabama  |         165563 |
+| Madison              | Alabama  |         126360 |
+| Shelby               | Alabama  |         119720 |
+| Jackson              | Alabama  |         112230 |
+| Monroe               | Alabama  |         107688 |
+| Anchorage            | Alaska   |          25641 |
+| Matanuska-Susitna    | Alaska   |           7603 |
+| Fairbanks North Star | Alaska   |           5909 |
+| Juneau               | Alaska   |           4172 |
+| Kenai Peninsula      | Alaska   |           3929 |
+| Bethel               | Alaska   |           3372 |
+| Petersburg           | Alaska   |           2758 |
+| Kusilvak             | Alaska   |           1130 |
+| Kodiak Island        | Alaska   |           1045 |
+| North Slope          | Alaska   |            991 |
+| Maricopa             | Arizona  |         478354 |
+| Pima                 | Arizona  |         102720 |
+| Pinal                | Arizona  |          43163 |
+| Yuma                 | Arizona  |          36306 |
+| Santa Cruz           | Arizona  |          21145 |
+| Mohave               | Arizona  |          19792 |
+| Yavapai              | Arizona  |          16423 |
+| Coconino             | Arizona  |          15417 |
+| Navajo               | Arizona  |          14701 |
+| Cochise              | Arizona  |          10514 |
+| Clark                | Arkansas |         267060 |
+| Polk                 | Arkansas |         124243 |
+| Johnson              | Arkansas |         109354 |
+| Union                | Arkansas |         106643 |
+| Fulton               | Arkansas |          91600 |
+| Lincoln              | Arkansas |          55637 |
+| Benton               | Arkansas |          53072 |
+| Pulaski              | Arkansas |          47526 |
+| Scott                | Arkansas |          47077 |
+| Boone                | Arkansas |          45944 |
++----------------------+----------+----------------+
+40 rows in set (4.25 sec)
+
+3.5 Report for top 10 sensitive counties per state from number of death point of view is displayed.
+
+mysql> set session sql_mode='';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT COUNTY, STATE, d_c AS DeahCount FROM (SELECT County,d_c,State, rank() over (PARTITION BY State ORDER BY d_c desc) state_rank FROM (SELECT sum(DeahCount) as d_c, County, State FROM DEATHS GROUP BY County ORDER BY d_c desc) as o ORDER BY d_c desc)AS o WHERE state_rank <=10 ORDER BY State, state_rank limit 40;
++----------------------+----------+-----------+
+| COUNTY               | STATE    | DeahCount |
++----------------------+----------+-----------+
+| Jefferson            | Alabama  |      4875 |
+| Montgomery           | Alabama  |      4781 |
+| Dallas               | Alabama  |      3166 |
+| Marion               | Alabama  |      2997 |
+| Washington           | Alabama  |      2667 |
+| Franklin             | Alabama  |      2056 |
+| Monroe               | Alabama  |      2056 |
+| Madison              | Alabama  |      1886 |
+| Shelby               | Alabama  |      1769 |
+| Jackson              | Alabama  |      1719 |
+| Anchorage            | Alaska   |       153 |
+| Petersburg           | Alaska   |        39 |
+| Matanuska-Susitna    | Alaska   |        30 |
+| Fairbanks North Star | Alaska   |        26 |
+| Kenai Peninsula      | Alaska   |        24 |
+| Juneau               | Alaska   |        24 |
+| Bethel               | Alaska   |        18 |
+| Kodiak Island        | Alaska   |         5 |
+| Yukon-Koyukuk        | Alaska   |         4 |
+| Kusilvak             | Alaska   |         4 |
+| Maricopa             | Arizona  |      7687 |
+| Pima                 | Arizona  |      1855 |
+| Yuma                 | Arizona  |       744 |
+| Pinal                | Arizona  |       649 |
+| Mohave               | Arizona  |       554 |
+| Navajo               | Arizona  |       449 |
+| Yavapai              | Arizona  |       411 |
+| Apache               | Arizona  |       317 |
+| Santa Cruz           | Arizona  |       306 |
+| Coconino             | Arizona  |       292 |
+| Clark                | Arkansas |      4162 |
+| Union                | Arkansas |      2636 |
+| Polk                 | Arkansas |      1918 |
+| Johnson              | Arkansas |      1504 |
+| Fulton               | Arkansas |      1232 |
+| Benton               | Arkansas |       804 |
+| Pulaski              | Arkansas |       748 |
+| Carroll              | Arkansas |       740 |
+| Lincoln              | Arkansas |       738 |
+| Columbia             | Arkansas |       653 |
++----------------------+----------+-----------+
+40 rows in set (0.29 sec)
+
+3.6a Report to show the progress of vaccinations and Sorting states by Rate of vaccination for 1st dose is displayed
+ 
+mysql> SELECT S.State,(SELECT sum(C.Population) FROM COUNTY C where C.State=S.State) as Total_Population,V.`People_with_1plus_Doses`,((V.`People_with_1plus_Doses`*100)/(SELECT sum(C.Population) FROM COUNTY C WHERE C.State=S.State)) as Percentage FROM STATE as S, VACCINATIONS as V WHERE S.State=V.State order by Percentage desc limit 40;
++----------------+------------------+-------------------------+------------+
+| State          | Total_Population | People_with_1plus_Doses | Percentage |
++----------------+------------------+-------------------------+------------+
+| Alaska         |           731545 |                   98076 |    13.4067 |
+| West Virginia  |          1792147 |                  195200 |    10.8920 |
+| New Mexico     |          2096829 |                  219033 |    10.4459 |
+| Connecticut    |          3565287 |                  365975 |    10.2650 |
+| North Dakota   |           762062 |                   72589 |     9.5253 |
+| Oklahoma       |          3956971 |                  372020 |     9.4016 |
+| Delaware       |           973764 |                   88325 |     9.0705 |
+| South Dakota   |           884659 |                   79025 |     8.9328 |
+| Virginia       |          8535519 |                  757544 |     8.8752 |
+| Vermont        |           623989 |                   55357 |     8.8715 |
+| Oregon         |          4217737 |                  361249 |     8.5650 |
+| Wyoming        |           578759 |                   49361 |     8.5288 |
+| Arkansas       |          3017804 |                  256307 |     8.4932 |
+| Louisiana      |          4648794 |                  384041 |     8.2611 |
+| Colorado       |          5758736 |                  472820 |     8.2105 |
+| Maine          |          1344212 |                  109917 |     8.1771 |
+| Florida        |         21477737 |                 1752699 |     8.1605 |
+| North Carolina |         10488084 |                  855450 |     8.1564 |
+| Michigan       |          9986857 |                  814362 |     8.1543 |
+| Hawaii         |          1415872 |                  115440 |     8.1533 |
+| Washington     |          7614893 |                  616340 |     8.0939 |
+| Kentucky       |          4467673 |                  360015 |     8.0582 |
+| New Jersey     |          8882190 |                  703957 |     7.9255 |
+| Wisconsin      |          5822434 |                  457768 |     7.8621 |
+| Montana        |          1068778 |                   83875 |     7.8477 |
+| California     |         39512223 |                 3044980 |     7.7064 |
+| Nevada         |          3080156 |                  236799 |     7.6879 |
+| Indiana        |          6732219 |                  517147 |     7.6817 |
+| Georgia        |         10617423 |                  813214 |     7.6592 |
+| Utah           |          3205958 |                  245534 |     7.6587 |
+| New Hampshire  |          1359711 |                  104042 |     7.6518 |
+| Minnesota      |          5639632 |                  431172 |     7.6454 |
+| South Carolina |          5148714 |                  391585 |     7.6055 |
+| Arizona        |          7278717 |                  553373 |     7.6026 |
+| Ohio           |         11689100 |                  883630 |     7.5594 |
+| Maryland       |          6045680 |                  454437 |     7.5167 |
+| Mississippi    |          2976149 |                  222860 |     7.4882 |
+| Massachusetts  |          6892503 |                  497445 |     7.2172 |
+| Texas          |         29072778 |                 2086493 |     7.1768 |
+| Pennsylvania   |         12801989 |                  917497 |     7.1668 |
++----------------+------------------+-------------------------+------------+
+40 rows in set (0.02 sec)
+
+3.6b Report to show the progress of vaccinations and Sorting states by rate of vaccination for 2nd dose is displayed
+
+mysql> SELECT S.State,(SELECT sum(C.Population) FROM COUNTY C where C.State=S.State) as Total_Population,V.`People_with_2plus_Doses`,((V.`People_with_2plus_Doses`*100)/(SELECT sum(C.Population) FROM COUNTY C WHERE C.State=S.State)) as Percentage FROM STATE as S, VACCINATIONS as V WHERE S.State=V.State order by Percentage desc limit 40;
++----------------+------------------+-------------------------+------------+
+| State          | Total_Population | People_with_2plus_Doses | Percentage |
++----------------+------------------+-------------------------+------------+
+| West Virginia  |          1792147 |                   72456 |     4.0430 |
+| Alaska         |           731545 |                   27528 |     3.7630 |
+| South Dakota   |           884659 |                   31863 |     3.6017 |
+| North Dakota   |           762062 |                   27418 |     3.5979 |
+| Vermont        |           623989 |                   19237 |     3.0829 |
+| New Mexico     |          2096829 |                   62821 |     2.9960 |
+| Tennessee      |          6829174 |                  192674 |     2.8213 |
+| Maine          |          1344212 |                   34299 |     2.5516 |
+| Rhode Island   |          1059361 |                   26973 |     2.5462 |
+| Connecticut    |          3565287 |                   90574 |     2.5404 |
+| Nebraska       |          1934408 |                   48889 |     2.5273 |
+| New Hampshire  |          1359711 |                   34130 |     2.5101 |
+| Montana        |          1068778 |                   26345 |     2.4650 |
+| Colorado       |          5758736 |                  140610 |     2.4417 |
+| Louisiana      |          4648794 |                  104070 |     2.2386 |
+| Oklahoma       |          3956971 |                   87596 |     2.2137 |
+| Oregon         |          4217737 |                   91240 |     2.1632 |
+| Michigan       |          9986857 |                  214234 |     2.1452 |
+| Minnesota      |          5639632 |                  119631 |     2.1213 |
+| Arkansas       |          3017804 |                   63356 |     2.0994 |
+| Iowa           |          3155070 |                   64234 |     2.0359 |
+| Hawaii         |          1415872 |                   28245 |     1.9949 |
+| Utah           |          3205958 |                   63286 |     1.9740 |
+| Texas          |         29072778 |                  564433 |     1.9414 |
+| Delaware       |           973764 |                   18568 |     1.9068 |
+| Pennsylvania   |         12801989 |                  237876 |     1.8581 |
+| Massachusetts  |          6892503 |                  126560 |     1.8362 |
+| Illinois       |         12671821 |                  230850 |     1.8218 |
+| Wyoming        |           578759 |                   10495 |     1.8134 |
+| Washington     |          7614893 |                  137930 |     1.8113 |
+| Indiana        |          6732219 |                  120352 |     1.7877 |
+| Florida        |         21477737 |                  373238 |     1.7378 |
+| Ohio           |         11689100 |                  200784 |     1.7177 |
+| Kentucky       |          4467673 |                   73264 |     1.6399 |
+| New Jersey     |          8882190 |                  145570 |     1.6389 |
+| South Carolina |          5148714 |                   84010 |     1.6317 |
+| North Carolina |         10488084 |                  170087 |     1.6217 |
+| Virginia       |          8535519 |                  138321 |     1.6205 |
+| Missouri       |          6626371 |                  106842 |     1.6124 |
+| Kansas         |          2990211 |                   47394 |     1.5850 |
++----------------+------------------+-------------------------+------------+
+40 rows in set (0.02 sec)
+
+3.7 Report of Counties in Texas having at least 5% population have been vaccinated by 1st dose are displayed.
+
+mysql> SELECT S.STATE,(SELECT sum(C.Population) FROM COUNTY C where C.State=S.State) as Total_population,V.`People_with_1plus_Doses`,((V.`People_with_1plus_Doses`*100)/(SELECT sum(C.Population) FROM COUNTY C WHERE C.State=S.State)) as Percentage
+    -> FROM STATE as S, VACCINATIONS as V WHERE S.State=V.State and V.`People_with_1plus_Doses` > 'Total_population'*0.05 limit 40;
++----------------+------------------+-------------------------+------------+
+| STATE          | Total_population | People_with_1plus_Doses | Percentage |
++----------------+------------------+-------------------------+------------+
+| Alaska         |           731545 |                   98076 |    13.4067 |
+| Alabama        |          4903185 |                  324998 |     6.6283 |
+| Arkansas       |          3017804 |                  256307 |     8.4932 |
+| Arizona        |          7278717 |                  553373 |     7.6026 |
+| California     |         39512223 |                 3044980 |     7.7064 |
+| Colorado       |          5758736 |                  472820 |     8.2105 |
+| Connecticut    |          3565287 |                  365975 |    10.2650 |
+| Delaware       |           973764 |                   88325 |     9.0705 |
+| Florida        |         21477737 |                 1752699 |     8.1605 |
+| Georgia        |         10617423 |                  813214 |     7.6592 |
+| Hawaii         |          1415872 |                  115440 |     8.1533 |
+| Iowa           |          3155070 |                  199242 |     6.3150 |
+| Idaho          |          1787065 |                  107234 |     6.0006 |
+| Illinois       |         12671821 |                  859076 |     6.7794 |
+| Indiana        |          6732219 |                  517147 |     7.6817 |
+| Kansas         |          2990211 |                  192026 |     6.4218 |
+| Kentucky       |          4467673 |                  360015 |     8.0582 |
+| Louisiana      |          4648794 |                  384041 |     8.2611 |
+| Massachusetts  |          6892503 |                  497445 |     7.2172 |
+| Maryland       |          6045680 |                  454437 |     7.5167 |
+| Maine          |          1344212 |                  109917 |     8.1771 |
+| Michigan       |          9986857 |                  814362 |     8.1543 |
+| Minnesota      |          5639632 |                  431172 |     7.6454 |
+| Missouri       |          6626371 |                  371382 |     5.6046 |
+| Mississippi    |          2976149 |                  222860 |     7.4882 |
+| Montana        |          1068778 |                   83875 |     7.8477 |
+| North Carolina |         10488084 |                  855450 |     8.1564 |
+| North Dakota   |           762062 |                   72589 |     9.5253 |
+| Nebraska       |          1934408 |                  138354 |     7.1523 |
+| New Hampshire  |          1359711 |                  104042 |     7.6518 |
+| New Jersey     |          8882190 |                  703957 |     7.9255 |
+| New Mexico     |          2096829 |                  219033 |    10.4459 |
+| Nevada         |          3080156 |                  236799 |     7.6879 |
+| Ohio           |         11689100 |                  883630 |     7.5594 |
+| Oklahoma       |          3956971 |                  372020 |     9.4016 |
+| Oregon         |          4217737 |                  361249 |     8.5650 |
+| Pennsylvania   |         12801989 |                  917497 |     7.1668 |
+| Rhode Island   |          1059361 |                   74473 |     7.0300 |
+| South Carolina |          5148714 |                  391585 |     7.6055 |
+| South Dakota   |           884659 |                   79025 |     8.9328 |
++----------------+------------------+-------------------------+------------+
+40 rows in set, 1 warning (0.02 sec)
+
+3.8 Report of country having largest population yet to be vaccinated, considering 75% of population 
+to be vaccinated to achieve herd immunity is displayed.
+
+mysql> set session sql_mode='';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT min(Perc_vaccinated), State FROM (SELECT State, State_population, People_vaccinated,((People_vaccinated/State_population)*100) AS Perc_vaccinated FROM (SELECT sum(Population) as State_population,State,(SELECT People_with_2plus_Doses FROM VACCINATIONS va WHERE va.state = co.State limit 1) AS People_vaccinated FROM County co group by state) as r) AS r where Perc_vaccinated < 75 limit 40;
++----------------------+---------+
+| min(Perc_vaccinated) | State   |
++----------------------+---------+
+|               0.9336 | Alabama |
++----------------------+---------+
+1 row in set (0.02 sec)
+
+mysql> notee;

@@ -1,0 +1,15 @@
+mysql> use axk7120
+Database changed
+Inserting a  new record which is not violating any integrity constraints in STATE Table
+mysql> INSERT into STATE values( 51, 'Australia', 'AS', 1976, 'Karajini', 1848, 150, 0, 178496, 670238);
+Query OK, 1 row affected (0.02 sec)
+
+Inserting a  new record which is not violating any integrity constraints in STATE Table
+mysql> INSERT into STATE values( 52, 'Arlington', 'OS', 1968, 'UTA', 1978, 150, 0, 148486, 962538);
+Query OK, 1 row affected (0.02 sec)
+
+Inserting a  new record which is not violating any integrity constraints in STATE Table
+mysql> INSERT INTO STATE values(53,'Edmond','PD',1986,'Oklahoma',1949,5989,1,98655,554343);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> notee;
